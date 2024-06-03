@@ -15,10 +15,10 @@ interface Todo {
 
 type TodoState = {
   todos: Todo[];
-  filter: "ALL" | "UNCOMPLETED" | "COMPLETED"
+  filter: "ALL" | "ACTIVE" | "COMPLETED"
 };
 
-type Filter = "ALL" | "UNCOMPLETED" | "COMPLETED";
+type Filter = "ALL" | "ACTIVE" | "COMPLETED";
 
 type Action =
   | { type: "ADD_TODO"; text: string }

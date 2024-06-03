@@ -13,10 +13,10 @@ const TodoFilter: React.FC = () => {
         All
       </button>
       <button
-        onClick={() => dispatch({ type: 'SET_FILTER', filter: 'UNCOMPLETED' })}
-        className={`px-4 py-2 rounded-md ${state.filter === 'UNCOMPLETED' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+        onClick={() => dispatch({ type: 'SET_FILTER', filter: 'ACTIVE' })}
+        className={`px-4 py-2 rounded-md ${state.filter === 'ACTIVE' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
       >
-        Uncompleted
+        Active
       </button>
       <button
         onClick={() => dispatch({ type: 'SET_FILTER', filter: 'COMPLETED' })}

@@ -8,7 +8,7 @@ const TodoList: React.FC = () => {
     () =>
       state.todos.filter((todo) => {
         if (state.filter === "ALL") return true;
-        if (state.filter === "UNCOMPLETED") return !todo.completed;
+        if (state.filter === "ACTIVE") return !todo.completed;
         if (state.filter === "COMPLETED") return todo.completed;
       }),
     [state.todos, state.filter]
