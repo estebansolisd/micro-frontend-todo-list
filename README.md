@@ -30,7 +30,7 @@ export default defineConfig({
     federation({
       name: 'shell',
       remotes: {
-        todo_app: 'http://localhost:5000/remoteEntry.js',
+        todo_app: 'http://localhost:5000/assets/remoteEntry.js',
       },
       shared: ['react', 'react-dom'],
     }),
