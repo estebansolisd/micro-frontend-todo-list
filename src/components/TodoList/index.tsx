@@ -13,10 +13,7 @@ const TodoList: React.FC = () => {
       }),
     [state.todos, state.filter]
   );
-
-  console.log(filteredTodos, "filteredTodos");
   
-
   return (
     <ul className="mt-4 space-y-2">
       {filteredTodos.map((todo) => (

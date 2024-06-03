@@ -14,7 +14,7 @@ const TodoCreation: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex space-x-2 mt-4">
+    <form onSubmit={handleSubmit} className="flex space-x-2 mt-4" role="form">
       <input
         type="text"
         value={text}
