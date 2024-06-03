@@ -1,102 +1,49 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
+import { render, fireEvent, screen } from '@testing-library/react';
 import TodoList from '@/components/TodoList';
-import { useTodoContext } from '@/context/TodoContext';
+import '@testing-library/jest-dom';
+import { vi } from "vitest";
 
-// Mock useTodoContext
-vi.mock('@/context/TodoContext', () => {
-  return {
-    useTodoContext: vi.fn(),
-  };
-});
+describe('<TodoList />', () => {
+  const todos = [
+    { id: '1', text: 'Write microfrontend', completed: false },
+    { id: '2', text: 'Write Songs !', completed: true },
+  ];
 
-describe('TodoList', () => {
-  const mockDispatch = vi.fn();
+  const onToggleTodoMock = vi.fn();
+  const onRemoveTodoMock = vi.fn();
 
   beforeEach(() => {
-    (useTodoContext as Mock).mockReturnValue({
-      state: {
-        todos: [
-          { id: '1', text: 'Learn React', completed: false },
-          { id: '2', text: 'Write Tests', completed: true },
-          { id: '3', text: 'Deploy App', completed: false },
-        ],
-        filter: 'ALL',
-      },
-      dispatch: mockDispatch,
+    render(
+      <TodoList
+        todos={todos}
+        onToggleTodo={onToggleTodoMock}
+        onRemoveTodo={onRemoveTodoMock}
+      />
+    );
+  });
+
+  it('renders todos correctly', () => {
+    todos.forEach(todo => {
+      const todoTextElement = screen.getByText(todo.text);
+      expect(todoTextElement).toBeInTheDocument();
     });
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('renders the list of todos', () => {
-    render(<TodoList />);
-    const todoItems = screen.getAllByRole('listitem');
-    expect(todoItems).toHaveLength(3);
-  });
-
-  it('toggles todo completion when clicking on checkbox or text', () => {
-    render(<TodoList />);
-    const checkbox = screen.getAllByRole('checkbox')[0];
+  it('calls onToggleTodo when checkbox is clicked', () => {
+    const checkbox = screen.getByLabelText('Write microfrontend');
     fireEvent.click(checkbox);
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'TOGGLE_TODO', id: '1' });
-
-    const todoText = screen.getByText('Write Tests');
-    fireEvent.click(todoText);
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'TOGGLE_TODO', id: '2' });
+    expect(onToggleTodoMock).toHaveBeenCalledWith('1');
   });
 
-  it('removes todo when clicking on remove button', () => {
-    render(<TodoList />);
-    const removeButton = screen.getAllByRole('button', { name: /remove/i })[0];
+  it('calls onRemoveTodo when remove button is clicked', () => {
+    const [removeButton] = screen.getAllByText('Remove');
     fireEvent.click(removeButton);
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'REMOVE_TODO', id: '1' });
+    expect(onRemoveTodoMock).toHaveBeenCalledWith('1');
   });
 
-  it('filters todos correctly based on state.filter === "ALL"', () => {
-    render(<TodoList />);
-    const todoItems = screen.getAllByRole('listitem');
-    expect(todoItems).toHaveLength(3);
-  });
-
-  it('filters todos correctly based on state.filter === "ACTIVE"', () => {
-    (useTodoContext as Mock).mockReturnValue({
-      state: {
-        todos: [
-          { id: '1', text: 'Learn React', completed: false },
-          { id: '2', text: 'Write Tests', completed: true },
-          { id: '3', text: 'Deploy App', completed: false },
-        ],
-        filter: 'ACTIVE',
-      },
-      dispatch: mockDispatch,
-    });
-
-    render(<TodoList />);
-    const todoItems = screen.getAllByRole('listitem');
-    expect(todoItems).toHaveLength(2);
-    expect(screen.getByText('Learn React')).toBeInTheDocument();
-    expect(screen.getByText('Deploy App')).toBeInTheDocument();
-  });
-
-  it('filters todos correctly based on state.filter === "COMPLETED"', () => {
-    (useTodoContext as Mock).mockReturnValue({
-      state: {
-        todos: [
-          { id: '1', text: 'Learn React', completed: false },
-          { id: '2', text: 'Write Tests', completed: true },
-          { id: '3', text: 'Deploy App', completed: false },
-        ],
-        filter: 'COMPLETED',
-      },
-      dispatch: mockDispatch,
-    });
-
-    render(<TodoList />);
-    const todoItems = screen.getAllByRole('listitem');
-    expect(todoItems).toHaveLength(1);
-    expect(screen.getByText('Write Tests')).toBeInTheDocument();
+  it('toggles todo completion when todo text is clicked', () => {
+    const todoText  = screen.getByText('Write Songs !');
+    fireEvent.click(todoText);
+    expect(onToggleTodoMock).toHaveBeenCalledWith('2');
   });
 });
