@@ -13,9 +13,9 @@ export default defineConfig({
       name: 'todo_app',
       filename: 'remoteEntry.js',
       exposes: {
-        './TodoList': './src/components/TodoList.tsx',
-        './TodoFilter': './src/components/TodoFilter.tsx',
-        './TodoCreation': './src/components/TodoList.tsx'
+        './TodoList': './src/components/TodoList',
+        './TodoFilter': './src/components/TodoFilter',
+        './TodoCreation': './src/components/TodoList'
       },
       shared: ['react', 'react-dom'],
     }),
@@ -28,4 +28,10 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/__tests__/setup.ts"
   },
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false
+  }
 });

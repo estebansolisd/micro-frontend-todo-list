@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Todo, TodoListProps } from "@/types";
+import React from "react";
+import { TodoListProps } from "@/types";
 
 const TodoList: React.FC<TodoListProps> = ({
   todos,

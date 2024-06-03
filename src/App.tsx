@@ -1,5 +1,5 @@
 import "@/App.css";
-import { TodoProvider, useTodoContext } from "@/context/TodoContext";
+import { useTodoContext } from "@/context/TodoContext";
 import TodoCreation from "@/components/TodoCreation";
 import TodoList from "@/components/TodoList";
 import TodoFilter from "./components/TodoFilter";
