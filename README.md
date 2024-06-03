@@ -7,10 +7,10 @@
 
 
 ### Commands
-`npm run dev` To run the project at port port 5000 so you can go to http://localhost:5000
-`npm run test` To run the tests
-`npm run build` To build the microfrontend
-`npm run serve` To run the build of the microfrontend
+- `npm run dev` To run the project at port port 5000 so you can go to http://localhost:5000
+- `npm run test` To run the tests
+- `npm run build` To build the microfrontend
+- `npm run serve` To run the build of the microfrontend
 
 
 
