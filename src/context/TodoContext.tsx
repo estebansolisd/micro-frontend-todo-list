@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from "react";
 import { v4 } from "uuid";
 
 interface Todo {
@@ -9,36 +15,48 @@ interface Todo {
 
 type TodoState = {
   todos: Todo[];
+  filter: "ALL" | "UNCOMPLETED" | "COMPLETED"
 };
 
-type Action = 
-  | { type: 'ADD_TODO'; text: string }
-  | { type: 'TOGGLE_TODO'; id: string }
-  | { type: 'REMOVE_TODO'; id: string }
-  | { type: 'SET_TODOS'; todos: Todo[] };
+type Filter = "ALL" | "UNCOMPLETED" | "COMPLETED";
+
+type Action =
+  | { type: "ADD_TODO"; text: string }
+  | { type: "TOGGLE_TODO"; id: string }
+  | { type: "REMOVE_TODO"; id: string }
+  | { type: "SET_TODOS"; todos: Todo[] }
+  | { type: "SET_FILTER"; filter: Filter };
 
 const initialState: TodoState = {
   todos: [],
+  filter: "ALL",
 };
 
-const TodoContext = createContext<{ state: TodoState; dispatch: React.Dispatch<Action> } | undefined>(undefined);
+const TodoContext = createContext<
+  { state: TodoState; dispatch: React.Dispatch<Action> } | undefined
+>(undefined);
 
 function todoReducer(state: TodoState, action: Action): TodoState {
   switch (action.type) {
-    case 'ADD_TODO':
+    case "ADD_TODO":
       const newTodo = { id: v4(), text: action.text, completed: false };
       return { ...state, todos: [...state.todos, newTodo] };
-    case 'TOGGLE_TODO':
+    case "TOGGLE_TODO":
       return {
         ...state,
-        todos: state.todos.map(todo =>
+        todos: state.todos.map((todo) =>
           todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
         ),
       };
-    case 'REMOVE_TODO':
-      return { ...state, todos: state.todos.filter(todo => todo.id !== action.id) };
-    case 'SET_TODOS':
+    case "REMOVE_TODO":
+      return {
+        ...state,
+        todos: state.todos.filter((todo) => todo.id !== action.id),
+      };
+    case "SET_TODOS":
       return { ...state, todos: action.todos };
+    case "SET_FILTER":
+      return { ...state, filter: action.filter };
     default:
       return state;
   }
@@ -48,12 +66,14 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
   useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem('todos') || '[]');
-    dispatch({ type: 'SET_TODOS', todos: savedTodos });
+    const savedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+    dispatch({ type: "SET_TODOS", todos: savedTodos });
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(state.todos));
+    if (state.todos.length) {
+        localStorage.setItem("todos", JSON.stringify(state.todos));
+    }
   }, [state.todos]);
 
   return (
@@ -66,7 +86,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 export const useTodoContext = () => {
   const context = useContext(TodoContext);
   if (context === undefined) {
-    throw new Error('useTodoContext must be used within a TodoProvider');
+    throw new Error("useTodoContext must be used within a TodoProvider");
   }
   return context;
 };
